@@ -68,4 +68,62 @@ final class AuthController extends AbstractController
     {
         throw new \LogicException('Endpoint is not callable.');
     }
+
+    #[Route('/token/refresh', name: 'auth_refresh', methods: ['POST'])]
+    #[OA\Post(
+        summary: 'Обновление access по refresh токену',
+        tags: ['user'],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                required: ['refresh_token'],
+                properties: [
+                    new OA\Property(
+                        property: 'refresh_token',
+                        type: 'string',
+                        example: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9...'
+                    ),
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Access + refresh токены',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(
+                            property: 'token',
+                            type: 'string',
+                            example: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9...'
+                        ),
+                        new OA\Property(
+                            property: 'refresh_token',
+                            type: 'string',
+                            example: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9...'
+                        ),
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 401,
+                description: 'Refresh token не найден',
+                content: new OA\JsonContent(
+                    type: 'object',
+                    properties: [
+                        new OA\Property(property: 'code', type: 'integer', example: 401),
+                        new OA\Property(
+                            property: 'message',
+                            type: 'string',
+                            example: 'JWT Refresh Token Not Found / Missing JWT Refresh Token'
+                        )
+                    ]
+                )
+            ),
+        ]
+    )]
+    public function refresh(): JsonResponse
+    {
+        throw new \LogicException('Endpoint is not callable.');
+    }
 }
