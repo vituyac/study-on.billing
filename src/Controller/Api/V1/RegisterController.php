@@ -13,6 +13,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Gesdinet\JWTRefreshTokenBundle\Model\RefreshTokenManagerInterface;
+use Gesdinet\JWTRefreshTokenBundle\Generator\RefreshTokenGeneratorInterface;
 
 #[Route('/api/v1', name: 'api_v1_', defaults: ['_format' => 'json'])]
 final class RegisterController extends AbstractController
@@ -21,6 +23,8 @@ final class RegisterController extends AbstractController
         private readonly UserPasswordHasherInterface $hasher,
         private readonly JWTTokenManagerInterface $tokenManager,
         private readonly EntityManagerInterface $em,
+        private readonly RefreshTokenManagerInterface $refreshTokenManager,
+        private readonly RefreshTokenGeneratorInterface $refreshTokenGenerator,
     ) {
     }
 
@@ -56,6 +60,7 @@ final class RegisterController extends AbstractController
                 content: new OA\JsonContent(
                     properties: [
                         new OA\Property(property: 'token', type: 'string', example: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9...'),
+                        new OA\Property(property: 'refresh_token', type: 'string', example: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9...'),
                         new OA\Property(
                             property: 'roles',
                             type: 'array',
@@ -82,8 +87,15 @@ final class RegisterController extends AbstractController
         $this->em->persist($user);
         $this->em->flush();
 
+        $refreshToken = $this->refreshTokenGenerator->createForUserWithTtl(
+            $user,
+            30 * 24 * 3600
+        );
+        $this->refreshTokenManager->save($refreshToken);
+
         return new JsonResponse([
             'token' => $this->tokenManager->create($user),
+            'refresh_token' => $refreshToken->getRefreshToken(),
             'roles' => $user->getRoles(),
         ], Response::HTTP_CREATED);
     }
