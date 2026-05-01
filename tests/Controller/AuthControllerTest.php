@@ -26,11 +26,49 @@ class AuthControllerTest extends WebTestCase
 
         $data = json_decode($client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertArrayHasKey('token', $data);
+        $this->assertArrayHasKey('refresh_token', $data);
 
         $token = $data['token'];
         $jwtEncoder = static::getContainer()->get(JWTEncoderInterface::class);
         $payload = $jwtEncoder->decode($token);
         $this->assertSame('user01@mail.ru', $payload['username']);
+    }
+
+    public function testRefreshUser(): void
+    {
+        $client = static::createClient();
+        $client->request(
+            'POST',
+            '/api/v1/auth',
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
+            json_encode([
+                'email' => 'user01@mail.ru',
+                'password' => 'password',
+            ], JSON_THROW_ON_ERROR)
+        );
+        $this->assertResponseIsSuccessful();
+
+        $data = json_decode($client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        $this->assertArrayHasKey('token', $data);
+        $this->assertArrayHasKey('refresh_token', $data);
+
+        $client->request(
+            'POST',
+            '/api/v1/token/refresh',
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
+            json_encode([
+                'refresh_token' => $data['refresh_token'],
+            ], JSON_THROW_ON_ERROR)
+        );
+        $this->assertResponseIsSuccessful();
+
+        $data = json_decode($client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        $this->assertArrayHasKey('token', $data);
+        $this->assertArrayHasKey('refresh_token', $data);
     }
 
     #[DataProvider('invalidUserDataProvider')]

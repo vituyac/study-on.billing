@@ -26,6 +26,7 @@ class RegisterControllerTest extends WebTestCase
 
         $data = json_decode($client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertArrayHasKey('token', $data);
+        $this->assertArrayHasKey('refresh_token', $data);
         $this->assertSame(['ROLE_USER'], $data['roles']);
 
         $token = $data['token'];
