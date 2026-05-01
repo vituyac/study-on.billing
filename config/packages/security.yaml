@@ -16,19 +16,22 @@ security:
             # Ensure dev tools and static assets are always allowed
             pattern: ^/(_profiler|_wdt|assets|build)/
             security: false
-        login:
-            pattern: ^/api/v1/auth
+        api:
+            pattern:   ^/api/v1
             stateless: true
+            entry_point: jwt
+
             json_login:
                 check_path: /api/v1/auth
                 username_path: email
                 password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
-        api:
-            pattern:   ^/api/v1
-            stateless: true
+
             jwt: ~
+
+            refresh_jwt:
+                check_path: /api/v1/token/refresh
         main:
             lazy: true
             provider: app_user_provider
@@ -44,6 +47,7 @@ security:
         - { path: ^/api/v1/auth, roles: PUBLIC_ACCESS }
         - { path: ^/api/v1/register, roles: PUBLIC_ACCESS }
         - { path: ^/api/v1/doc, roles: PUBLIC_ACCESS }
+        - { path: ^/api/v1/token/refresh, roles: PUBLIC_ACCESS }
         - { path: ^/api/v1, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:
