@@ -60,7 +60,7 @@ final class RegisterController extends AbstractController
                 content: new OA\JsonContent(
                     properties: [
                         new OA\Property(property: 'token', type: 'string', example: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9...'),
-                        new OA\Property(property: 'refresh_token', type: 'string', example: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9...'),
+                        new OA\Property(property: 'refreshToken', type: 'string', example: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9...'),
                         new OA\Property(
                             property: 'roles',
                             type: 'array',
@@ -95,7 +95,7 @@ final class RegisterController extends AbstractController
 
         return new JsonResponse([
             'token' => $this->tokenManager->create($user),
-            'refresh_token' => $refreshToken->getRefreshToken(),
+            'refreshToken' => $refreshToken->getRefreshToken(),
             'roles' => $user->getRoles(),
         ], Response::HTTP_CREATED);
     }

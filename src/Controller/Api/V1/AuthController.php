@@ -44,6 +44,11 @@ final class AuthController extends AbstractController
                             type: 'string',
                             example: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9...'
                         ),
+                        new OA\Property(
+                            property: 'refreshToken',
+                            type: 'string',
+                            example: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9...'
+                        ),
                     ]
                 )
             ),
@@ -76,10 +81,10 @@ final class AuthController extends AbstractController
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
-                required: ['refresh_token'],
+                required: ['refreshToken'],
                 properties: [
                     new OA\Property(
-                        property: 'refresh_token',
+                        property: 'refreshToken',
                         type: 'string',
                         example: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9...'
                     ),
@@ -98,7 +103,7 @@ final class AuthController extends AbstractController
                             example: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9...'
                         ),
                         new OA\Property(
-                            property: 'refresh_token',
+                            property: 'refreshToken',
                             type: 'string',
                             example: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9...'
                         ),
