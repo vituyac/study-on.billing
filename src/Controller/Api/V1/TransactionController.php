@@ -71,7 +71,7 @@ final class TransactionController extends AbstractController
                                 nullable: true,
                                 example: 'php-basics'
                             ),
-                            new OA\Property(property: 'amount', type: 'integer', example: 100000),
+                            new OA\Property(property: 'amount', type: 'string', example: '100.00'),
                         ],
                         type: 'object'
                     )

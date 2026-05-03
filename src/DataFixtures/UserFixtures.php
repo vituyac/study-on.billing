@@ -23,7 +23,7 @@ class UserFixtures extends Fixture
                 'username' => 'user01@mail.ru',
                 'password' => 'password',
                 'roles' => ['ROLE_USER'],
-                'balance' => 16000,
+                'balance' => 160000,
             ],
             [
                 'username' => 'user02@mail.ru',

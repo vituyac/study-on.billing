@@ -38,7 +38,7 @@ final class CourseController extends AbstractController
                         properties: [
                             new OA\Property(property: 'code', type: 'string', example: 'php-basics'),
                             new OA\Property(property: 'type', type: 'string', example: 'RENT'),
-                            new OA\Property(property: 'price', type: 'integer', example: 10000),
+                            new OA\Property(property: 'price', type: 'string', example: '100.00'),
                         ],
                         type: 'object'
                     )
@@ -77,7 +77,7 @@ final class CourseController extends AbstractController
                     properties: [
                         new OA\Property(property: 'code', type: 'string', example: 'php-basics'),
                         new OA\Property(property: 'type', type: 'string', example: 'RENT'),
-                        new OA\Property(property: 'price', type: 'integer', example: 10000),
+                        new OA\Property(property: 'price', type: 'string', example: '100.00'),
                     ],
                     type: 'object'
                 )

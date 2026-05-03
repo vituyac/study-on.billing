@@ -82,9 +82,18 @@ class Course
         return $this;
     }
 
-    public function getPrice(): ?int
+    public function getPriceInt(): ?int
     {
         return $this->price;
+    }
+
+    public function getPrice(): ?string
+    {
+        if ($this->price === null) {
+            return null;
+        }
+
+        return number_format($this->price / 100, 2, '.', '');
     }
 
     public function setPrice(int $price): static

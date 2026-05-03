@@ -75,7 +75,7 @@ class CourseControllerTest extends WebTestCase
         $this->assertIsArray($course);
         $this->assertSame('php-basics', $course['code']);
         $this->assertSame('RENT', $course['type']);
-        $this->assertSame(10000, $course['price']);
+        $this->assertSame('100.00', $course['price']);
     }
 
     public function testSuccessPay()
