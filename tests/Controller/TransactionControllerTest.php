@@ -63,7 +63,7 @@ class TransactionControllerTest extends WebTestCase
             1,
             [
                 'type' => 'PAYMENT',
-                'amount' => 10000,
+                'amount' => '100.00',
                 'courseCode' => 'php-basics',
             ],
         ];
@@ -75,7 +75,7 @@ class TransactionControllerTest extends WebTestCase
             1,
             [
                 'type' => 'DEPOSIT',
-                'amount' => 16000,
+                'amount' => '160.00',
             ],
         ];
 

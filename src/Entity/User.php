@@ -130,7 +130,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $data;
     }
 
-    public function getBalance(): ?int
+    public function getBalanceInt(): ?int
     {
         return $this->balance;
     }
@@ -140,6 +140,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->balance = $balance;
 
         return $this;
+    }
+
+    public function getBalance(): ?string
+    {
+        if ($this->balance === null) {
+            return null;
+        }
+
+        return number_format($this->balance / 100, 2, '.', '');
     }
 
     /**

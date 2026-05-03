@@ -51,6 +51,7 @@ class Transaction
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['transaction:item'])]
     private ?\DateTimeImmutable $expiresAt = null;
 
     public function __construct()
@@ -111,7 +112,7 @@ class Transaction
         return $this;
     }
 
-    public function getAmount(): ?int
+    public function getAmountInt(): ?int
     {
         return $this->amount;
     }
@@ -121,6 +122,15 @@ class Transaction
         $this->amount = $amount;
 
         return $this;
+    }
+
+    public function getAmount(): ?string
+    {
+        if ($this->amount === null) {
+            return null;
+        }
+
+        return number_format($this->amount / 100, 2, '.', '');
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable

@@ -123,7 +123,7 @@ class CourseControllerTest extends WebTestCase
         $this->assertResponseIsSuccessful();
 
         $user = json_decode($client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR);
-        $this->assertSame(6000, $user['balance']);
+        $this->assertSame('60.00', $user['balance']);
     }
 
     public function testUnsuccessPay()

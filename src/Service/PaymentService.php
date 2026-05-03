@@ -26,7 +26,7 @@ class PaymentService
             $transaction->setType(Transaction::TYPES['DEPOSIT']);
             $transaction->setAmount($amount);
 
-            $user->setBalance(($user->getBalance() ?? 0) + $amount);
+            $user->setBalance(($user->getBalanceInt() ?? 0) + $amount);
 
             $this->em->persist($transaction);
 
@@ -36,7 +36,7 @@ class PaymentService
 
     public function pay(User $user, Course $course): Transaction
     {
-        if (($user->getBalance() ?? 0) < $course->getPrice()) {
+        if (($user->getBalanceInt() ?? 0) < $course->getPrice()) {
             throw new \DomainException();
         }
 
@@ -51,7 +51,7 @@ class PaymentService
                 $transaction->setExpiresAt((new \DateTimeImmutable())->modify('+7 days'));
             }
 
-            $user->setBalance($user->getBalance() - $course->getPrice());
+            $user->setBalance(($user->getBalanceInt() ?? 0) - $course->getPrice());
 
             $this->em->persist($transaction);
 
