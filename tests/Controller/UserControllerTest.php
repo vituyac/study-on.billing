@@ -40,7 +40,7 @@ class UserControllerTest extends WebTestCase
         $currentUser = json_decode($client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertSame('user01@mail.ru', $currentUser['email']);
         $this->assertSame(['ROLE_USER'], $currentUser['roles']);
-        $this->assertSame('1.23', $currentUser['balance']);
+        $this->assertSame(16000, $currentUser['balance']);
     }
 
     #[DataProvider('invalidTokenDataProvider')]
