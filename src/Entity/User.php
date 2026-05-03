@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -38,8 +40,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, options: ['default' => 0])]
-    private ?string $balance = '0.00';
+    #[ORM\Column(nullable: true)]
+    #[Assert\PositiveOrZero(message: 'Баланс не может быть отрицательным.')]
+    private ?int $balance = null;
+
+    /**
+     * @var Collection<int, Transaction>
+     */
+    #[ORM\OneToMany(targetEntity: Transaction::class, mappedBy: 'customer')]
+    private Collection $transactions;
+
+    public function __construct()
+    {
+        $this->transactions = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -116,14 +130,44 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $data;
     }
 
-    public function getBalance(): ?string
+    public function getBalance(): ?int
     {
         return $this->balance;
     }
 
-    public function setBalance(string $balance): static
+    public function setBalance(int $balance): static
     {
         $this->balance = $balance;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Transaction>
+     */
+    public function getTransactions(): Collection
+    {
+        return $this->transactions;
+    }
+
+    public function addTransaction(Transaction $transaction): static
+    {
+        if (!$this->transactions->contains($transaction)) {
+            $this->transactions->add($transaction);
+            $transaction->setCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTransaction(Transaction $transaction): static
+    {
+        if ($this->transactions->removeElement($transaction)) {
+            // set the owning side to null (unless already changed)
+            if ($transaction->getCustomer() === $this) {
+                $transaction->setCustomer(null);
+            }
+        }
 
         return $this;
     }
