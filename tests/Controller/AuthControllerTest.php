@@ -26,7 +26,7 @@ class AuthControllerTest extends WebTestCase
 
         $data = json_decode($client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertArrayHasKey('token', $data);
-        $this->assertArrayHasKey('refresh_token', $data);
+        $this->assertArrayHasKey('refreshToken', $data);
 
         $token = $data['token'];
         $jwtEncoder = static::getContainer()->get(JWTEncoderInterface::class);
@@ -52,7 +52,7 @@ class AuthControllerTest extends WebTestCase
 
         $data = json_decode($client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertArrayHasKey('token', $data);
-        $this->assertArrayHasKey('refresh_token', $data);
+        $this->assertArrayHasKey('refreshToken', $data);
 
         $client->request(
             'POST',
@@ -61,14 +61,14 @@ class AuthControllerTest extends WebTestCase
             [],
             ['CONTENT_TYPE' => 'application/json'],
             json_encode([
-                'refresh_token' => $data['refresh_token'],
+                'refreshToken' => $data['refreshToken'],
             ], JSON_THROW_ON_ERROR)
         );
         $this->assertResponseIsSuccessful();
 
         $data = json_decode($client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertArrayHasKey('token', $data);
-        $this->assertArrayHasKey('refresh_token', $data);
+        $this->assertArrayHasKey('refreshToken', $data);
     }
 
     #[DataProvider('invalidUserDataProvider')]
