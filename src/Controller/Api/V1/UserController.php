@@ -58,7 +58,7 @@ final class UserController extends AbstractController
         return new JsonResponse([
             'email' => $user->getEmail(),
             'roles' => $user->getRoles(),
-            'balance' => $user->getBalance(),
+            'balance' => $user->getBalance() ?? '0.00',
         ], Response::HTTP_OK);
     }
 }
