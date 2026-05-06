@@ -51,7 +51,7 @@ class PaymentService
                 $transaction->setExpiresAt((new \DateTimeImmutable())->modify('+7 days'));
             }
 
-            $user->setBalance(($user->getBalanceInt() ?? 0) - $course->getPriceInt());
+            $user->setBalance(($user->getBalanceInt() ?? 0) - ($course->getPriceInt() ?? 0));
 
             $this->em->persist($transaction);
 
