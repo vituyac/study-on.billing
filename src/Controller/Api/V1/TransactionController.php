@@ -83,7 +83,7 @@ final class TransactionController extends AbstractController
             ),
         ]
     )]
-    public function list(Request $request): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         $user = $this->getUser();
 

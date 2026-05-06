@@ -51,7 +51,7 @@ final class UserController extends AbstractController
         ]
     )]
     #[Security(name: 'Bearer')]
-    public function current(): JsonResponse
+    public function show(): JsonResponse
     {
         $user = $this->getUser();
 
