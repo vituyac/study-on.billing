@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 
 class UserControllerTest extends WebTestCase
 {
-    public function testCurrentUser()
+    public function testShowCurrentUser()
     {
         $client = static::createClient();
         $client->request(
@@ -40,11 +40,11 @@ class UserControllerTest extends WebTestCase
         $currentUser = json_decode($client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertSame('user01@mail.ru', $currentUser['email']);
         $this->assertSame(['ROLE_USER'], $currentUser['roles']);
-        $this->assertSame('160.00', $currentUser['balance']);
+        $this->assertSame('1500.00', $currentUser['balance']);
     }
 
     #[DataProvider('invalidTokenDataProvider')]
-    public function testCurrentUserWithInvalidToken(array $formData, string $expectedError): void
+    public function testShowCurrentUserWithInvalidToken(array $formData, string $expectedError): void
     {
         $client = static::createClient();
         $client->request(

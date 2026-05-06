@@ -2,11 +2,12 @@
 
 namespace App\Tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class CourseControllerTest extends WebTestCase
 {
-    public function testList()
+    public function testIndex()
     {
         $client = static::createClient();
         $client->request(
@@ -101,7 +102,7 @@ class CourseControllerTest extends WebTestCase
 
         $client->request(
             'POST',
-            '/api/v1/courses/php-basics/pay',
+            '/api/v1/courses/symfony-start/pay',
             [],
             [],
             ['HTTP_AUTHORIZATION' => 'Bearer ' . $token]
@@ -111,7 +112,7 @@ class CourseControllerTest extends WebTestCase
         $response = json_decode($client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertIsArray($response);
         $this->assertSame(true, $response['success']);
-        $this->assertSame('RENT', $response['courseType']);
+        $this->assertSame('FULL', $response['courseType']);
 
         $client->request(
             'GET',
@@ -123,10 +124,11 @@ class CourseControllerTest extends WebTestCase
         $this->assertResponseIsSuccessful();
 
         $user = json_decode($client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR);
-        $this->assertSame('60.00', $user['balance']);
+        $this->assertSame('1300.00', $user['balance']);
     }
 
-    public function testUnsuccessPay()
+    #[DataProvider('invalidPayDataProvider')]
+    public function testUnsuccessPay(array $formData, string $expectedError, int $statusCode): void
     {
         $client = static::createClient();
         $client->request(
@@ -149,16 +151,28 @@ class CourseControllerTest extends WebTestCase
 
         $client->request(
             'POST',
-            '/api/v1/courses/symfony-start/pay',
+            '/api/v1/courses/' . $formData['courseCode'] . '/pay',
             [],
             [],
             ['HTTP_AUTHORIZATION' => 'Bearer ' . $token]
         );
-        $this->assertResponseStatusCodeSame(406);
+        $this->assertResponseStatusCodeSame($statusCode);
 
         $response = json_decode($client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertIsArray($response);
-        $this->assertSame(406, $response['code']);
-        $this->assertSame('На вашем счету недостаточно средств', $response['message']);
+        $this->assertSame($statusCode, $response['code']);
+        $this->assertSame($expectedError, $response['message']);
+    }
+
+    #[DataProvider('invalidPayDataProvider')]
+    public static function invalidPayDataProvider(): iterable
+    {
+        yield 'not enough balance' => [[
+            'courseCode' => 'web-security',
+        ], 'На вашем счету недостаточно средств', 406];
+
+        yield 'course already paid' => [[
+            'courseCode' => 'php-basics',
+        ], 'Курс уже оплачен', 409];
     }
 }

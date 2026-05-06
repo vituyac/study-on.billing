@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 class TransactionControllerTest extends WebTestCase
 {
     #[DataProvider('transactionFiltersDataProvider')]
-    public function testListWithFilters(array $filters, int $expectedCount, ?array $expectedFirst = null): void
+    public function testIndexWithFilters(array $filters, int $expectedCount, ?array $expectedFirst = null): void
     {
         $client = static::createClient();
         $client->request(
@@ -75,7 +75,7 @@ class TransactionControllerTest extends WebTestCase
             1,
             [
                 'type' => 'DEPOSIT',
-                'amount' => '160.00',
+                'amount' => '1600.00',
             ],
         ];
 

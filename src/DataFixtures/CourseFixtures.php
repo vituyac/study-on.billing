@@ -29,7 +29,7 @@ class CourseFixtures extends Fixture
             [
                 'code' => 'web-security',
                 'type' => Course::TYPES['FULL'],
-                'price' => 15000,
+                'price' => 160000,
             ],
         ];
 
