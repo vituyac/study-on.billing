@@ -5,6 +5,7 @@ namespace App\Controller\Api\V1;
 use App\Entity\Course;
 use App\Service\PaymentService;
 use App\Repository\CourseRepository;
+use App\Repository\TransactionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use OpenApi\Attributes as OA;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
@@ -21,6 +22,7 @@ final class CourseController extends AbstractController
         private readonly CourseRepository $courseRepository,
         private readonly EntityManagerInterface $em,
         private readonly PaymentService $paymentService,
+        private readonly TransactionRepository $transactionRepository,
     ) {
     }
 
@@ -46,7 +48,7 @@ final class CourseController extends AbstractController
             ),
         ]
     )]
-    public function list(): JsonResponse
+    public function index(): JsonResponse
     {
         $courses = $this->courseRepository->findAll();
 
@@ -159,19 +161,32 @@ final class CourseController extends AbstractController
     {
         $user = $this->getUser();
 
+        $response = [
+            'success' => true,
+            'courseType' => $course->getType(),
+        ];
+
+        if ($course->getType() === 'FREE') {
+            return new JsonResponse($response, Response::HTTP_OK);
+        }
+
+        $pastTransactions = $this->transactionRepository->findByFilters(
+            $user,
+            ['type' => 'PAYMENT', 'course_code' => $course->getCode(), 'skip_expired' => true]
+        );
+
+        if (!empty($pastTransactions)) {
+            return new JsonResponse(['code' => 409, 'message' => 'Курс уже оплачен'], 409);
+        }
+
         try {
             $transaction = $this->paymentService->pay($user, $course);
         } catch (\DomainException) {
             return new JsonResponse(['code' => 406, 'message' => 'На вашем счету недостаточно средств'], 406);
         }
 
-        $response = [
-            'success' => true,
-            'courseType' => $course->getType(),
-        ];
-
         if ($course->getType() === 'RENT') {
-            $response['expiresAt'] = $transaction->getExpiresAt()?->format(DATE_ATOM);
+            $response['expiresAt'] = $transaction->getExpiresAt();
         }
 
         return new JsonResponse($response, Response::HTTP_OK);
