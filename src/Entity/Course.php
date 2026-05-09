@@ -48,6 +48,15 @@ class Course
     #[Groups(['course:item'])]
     private ?int $price = 0;
 
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Введите название курса')]
+    #[Assert\Length(
+        max: 255,
+        maxMessage: 'Название курса должно быть не длиннее {{ limit }} символов'
+    )]
+    #[Groups(['course:item'])]
+    private ?string $title = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -99,6 +108,18 @@ class Course
     public function setPrice(int $price): static
     {
         $this->price = $price;
+
+        return $this;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): static
+    {
+        $this->title = $title;
 
         return $this;
     }

@@ -74,6 +74,7 @@ class CourseControllerTest extends WebTestCase
 
         $course = json_decode($client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertIsArray($course);
+        $this->assertSame('PHP для начинающих', $course['title']);
         $this->assertSame('php-basics', $course['code']);
         $this->assertSame('RENT', $course['type']);
         $this->assertSame('100.00', $course['price']);
