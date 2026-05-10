@@ -49,10 +49,10 @@ class Course
     private ?int $price = 0;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message: 'Введите название курса')]
+    #[Assert\NotBlank(message: 'Введите название курса.')]
     #[Assert\Length(
         max: 255,
-        maxMessage: 'Название курса должно быть не длиннее {{ limit }} символов'
+        maxMessage: 'Название курса должно быть не длиннее {{ limit }} символов.'
     )]
     #[Groups(['course:item'])]
     private ?string $title = null;
