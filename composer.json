@@ -21,6 +21,7 @@
         "symfony/expression-language": "8.0.*",
         "symfony/flex": "^2",
         "symfony/framework-bundle": "8.0.*",
+        "symfony/mailer": "8.0.*",
         "symfony/maker-bundle": "^1.67",
         "symfony/password-hasher": "8.0.*",
         "symfony/property-access": "8.0.*",
