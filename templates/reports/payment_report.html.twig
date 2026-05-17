@@ -1,0 +1,37 @@
+{% set courseTypes = {
+    1: 'Аренда',
+    2: 'Покупка',
+    3: 'Бесплатный'
+} %}
+
+<h3>
+    Отчёт об оплаченных курсах за период {{ from|date('d.m.Y') }} - {{ to|date('d.m.Y') }}
+</h3>
+
+<table border="1" cellpadding="6" cellspacing="0">
+    <thead>
+        <tr>
+            <th>Название курса</th>
+            <th>Тип курса</th>
+            <th>Число аренд/покупок</th>
+            <th>Общая сумма</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for row in rows %}
+            <tr>
+                <td>{{ row.courseTitle }}</td>
+                <td>{{ courseTypes[row.courseType] ?? row.courseType }}</td>
+                <td>{{ row.purchasesCount }}</td>
+                <td>{{ (row.totalAmount / 100)|number_format(2, '.', '') }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">За выбранный период оплат не найдено.</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<p><b>Итого: {{ (total / 100)|number_format(2, '.', '') }}</b></p>
